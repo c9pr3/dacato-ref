@@ -26,7 +26,7 @@ public final class Customers {
         return ((Truncater) () -> config).truncate(new Query("TRUNCATE TABLE customer"));
     }
 
-    CompletableFuture<Customer> findOne(final CompletableFuture<?> id) {
+    CompletableFuture<Customer> findOne(final CompletableFuture<Long> id) {
         return ((Finder<Long>) () -> config).findOne(new Query("SELECT %s FROM customer WHERE id = ?"),
                 Customer.Fields.ID, id).thenApply(id1 -> new Customer(config, id1));
     }
