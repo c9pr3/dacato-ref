@@ -47,4 +47,22 @@ public final class Customers {
                 Customer.Fields.ID, new HashMap<>())
                 .thenApply(longList -> longList.stream().map(l -> new Customer(config, l)).collect(Collectors.toList()));
     }
+
+    public CompletableFuture<List<?>> findIdAndFirstNameByID(final CompletableFuture<Long> id,
+                                                             final CompletableFuture<String> firstName) {
+
+        final Query query = new Query("SELECT %s, %s, %s FROM customer WHERE %s = ? AND %s = ?");
+
+        final List<DatabaseField<?>> columnsToReturn = new LinkedList<>();
+        columnsToReturn.add(Customer.Fields.ID);
+        columnsToReturn.add(Customer.Fields.FIRST_NAME);
+        columnsToReturn.add(Customer.Fields.LAST_NAME);
+
+        final Map<DatabaseField<?>, CompletableFuture<?>> columnsToSelect = new HashMap<>();
+        columnsToSelect.put(Customer.Fields.ID, id);
+        columnsToSelect.put(Customer.Fields.FIRST_NAME, firstName);
+
+        return ((MultipleReturnFinder<?>) cs.ecs.jdaoref.ApplicationConfig::new)
+                .findMultiple(query, columnsToReturn, columnsToSelect);
+    }
 }

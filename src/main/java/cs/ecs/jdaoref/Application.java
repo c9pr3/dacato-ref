@@ -1,11 +1,12 @@
 package cs.ecs.jdaoref;
 
-import co.ecso.jdao.ConnectionPool;
+import co.ecso.jdao.Query;
 
 import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -52,6 +53,40 @@ public final class Application {
 
         } catch (final SQLException | InterruptedException | ExecutionException | TimeoutException e) {
             e.printStackTrace();
+        }
+
+        //do fail on wrong query
+        CompletableFuture<Long> fail1 = ((FailingInserter<Long>) ApplicationConfig::new).insert(new Query("foo bar"), new HashMap<>());
+        try {
+            fail1.get();
+        } catch (InterruptedException | ExecutionException e) {
+            System.out.println("FAIL1 DONE");
+        }
+
+        //test chained exception
+        try {
+            new Customers(new ApplicationConfig()).add("foo", "bar", 1L).thenAccept(
+                    cu -> ((FailingInserter<Long>) ApplicationConfig::new).insert(
+                    new Query("INSERT INTO customer VALUES (null, 'abc', 'def', 1234)"), new HashMap<>())).get();
+        } catch (InterruptedException | ExecutionException e) {
+            System.out.println("FAIL2 DONE");
+            System.exit(2);
+        }
+
+        //do fail on purpose because of interface
+        CompletableFuture<Long> fail2 = ((FailingInserter<Long>) ApplicationConfig::new).insert(
+                new Query("INSERT INTO customer VALUES (null, 'abc', 'def', 1234)"), new HashMap<>());
+        try {
+            fail2.get();
+        } catch (InterruptedException | ExecutionException e) {
+            System.out.println("FAIL3 DONE");
+        }
+
+        try {
+            CompletableFuture<Long> fail3 = ((FailingInserter<Long>) ApplicationConfig::new).insert(new Query("foo bar"), new HashMap<>());
+            fail3.get();
+        } catch (InterruptedException | ExecutionException e) {
+            System.out.println("FAIL4 DONE");
         }
 
         System.exit(0);
