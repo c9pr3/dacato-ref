@@ -1,6 +1,9 @@
 package cs.ecs.jdaoref;
 
-import co.ecso.jdao.*;
+import co.ecso.jdao.database.ColumnList;
+import co.ecso.jdao.database.DatabaseEntity;
+import co.ecso.jdao.database.DatabaseField;
+import co.ecso.jdao.database.SingleFindQuery;
 
 import java.sql.SQLException;
 import java.sql.Types;
@@ -36,30 +39,28 @@ public final class Customer implements DatabaseEntity<Long> {
 
     public CompletableFuture<String> firstName() {
         this.checkValidity();
-        return ((SingleColumnFinder<String>) () -> config).find(
-                new SingleFindQuery<>(QUERY, Fields.FIRST_NAME,
-                        new ColumnList().get(Fields.ID, CompletableFuture.completedFuture(this.id())))
+        return find(new SingleFindQuery<>(QUERY, Fields.FIRST_NAME,
+                new ColumnList().get(Fields.ID, CompletableFuture.completedFuture(this.id())))
         );
     }
 
     public CompletableFuture<String> lastName() {
         this.checkValidity();
-        return ((SingleColumnFinder<String>) () -> config).find(
-                new SingleFindQuery<>(QUERY, Fields.LAST_NAME,
-                        new ColumnList().get(Fields.ID, CompletableFuture.completedFuture(this.id())))
+        return find(new SingleFindQuery<>(QUERY, Fields.LAST_NAME,
+                new ColumnList().get(Fields.ID, CompletableFuture.completedFuture(this.id())))
         );
     }
 
     public CompletableFuture<Long> number() {
         this.checkValidity();
-        return ((SingleColumnFinder<Long>) () -> config).find(
-                new SingleFindQuery<>(QUERY, Fields.NUMBER,
-                        new ColumnList().get(Fields.ID, CompletableFuture.completedFuture(this.id())))
+        return find(new SingleFindQuery<>(QUERY, Fields.NUMBER,
+                new ColumnList().get(Fields.ID, CompletableFuture.completedFuture(this.id())))
         );
     }
 
     @Override
-    public CompletableFuture<? extends DatabaseEntity> save(Map<DatabaseField<?>, ?> map) {
+    public CompletableFuture<? extends DatabaseEntity> save(final Map<DatabaseField<?>, ?> valuesMap,
+                                                            final Map<DatabaseField<?>, ?> whereMap) {
         this.checkValidity();
 
         //TODO
@@ -82,7 +83,7 @@ public final class Customer implements DatabaseEntity<Long> {
     }
 
     @Override
-    public co.ecso.jdao.ApplicationConfig config() {
+    public co.ecso.jdao.config.ApplicationConfig config() {
         return this.config;
     }
 

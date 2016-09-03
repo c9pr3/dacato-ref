@@ -1,6 +1,6 @@
 package cs.ecs.jdaoref;
 
-import co.ecso.jdao.ConnectionPool;
+import co.ecso.jdao.connection.ConnectionPool;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import snaq.db.ConnectionPoolManager;
 
@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadFactory;
  * @version $Id:$
  * @since 29.08.16
  */
-public final class ApplicationConfig implements co.ecso.jdao.ApplicationConfig {
+public final class ApplicationConfig implements co.ecso.jdao.config.ApplicationConfig {
 
     private static snaq.db.ConnectionPool CONNECTION_POOL;
     private static ThreadFactory THREAD_FACTORY_BUILDER;
