@@ -1,9 +1,6 @@
 package cs.ecs.jdaoref;
 
-import co.ecso.jdao.DatabaseEntity;
-import co.ecso.jdao.DatabaseField;
-import co.ecso.jdao.Finder;
-import co.ecso.jdao.Query;
+import co.ecso.jdao.*;
 
 import java.sql.SQLException;
 import java.sql.Types;
@@ -18,9 +15,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @version $Id:$
  * @since 29.08.16
  */
+@SuppressWarnings("WeakerAccess")
 public final class Customer implements DatabaseEntity<Long> {
     private static final String TABLE_NAME = "customer";
-    private static final Query QUERY = new Query(String.format("SELECT %%s FROM %s WHERE id = ?", TABLE_NAME));
+    private static final String QUERY = String.format("SELECT %%s FROM %s WHERE id = ?", TABLE_NAME);
     private final Long id;
     private final ApplicationConfig config;
     private AtomicBoolean invalid = new AtomicBoolean(false);
@@ -38,20 +36,26 @@ public final class Customer implements DatabaseEntity<Long> {
 
     public CompletableFuture<String> firstName() {
         this.checkValidity();
-        return ((Finder<String>) () -> config).findOne(QUERY, Fields.FIRST_NAME,
-                CompletableFuture.completedFuture(this.id()));
+        return ((SingleColumnFinder<String>) () -> config).find(
+                new SingleFindQuery<>(QUERY, Fields.FIRST_NAME,
+                        new ColumnList().get(Fields.ID, CompletableFuture.completedFuture(this.id())))
+        );
     }
 
     public CompletableFuture<String> lastName() {
         this.checkValidity();
-        return ((Finder<String>) () -> config).findOne(QUERY, Fields.LAST_NAME,
-                CompletableFuture.completedFuture(this.id()));
+        return ((SingleColumnFinder<String>) () -> config).find(
+                new SingleFindQuery<>(QUERY, Fields.LAST_NAME,
+                        new ColumnList().get(Fields.ID, CompletableFuture.completedFuture(this.id())))
+        );
     }
 
     public CompletableFuture<Long> number() {
         this.checkValidity();
-        return ((Finder<Long>) () -> config).findOne(QUERY, Fields.NUMBER,
-                CompletableFuture.completedFuture(this.id()));
+        return ((SingleColumnFinder<Long>) () -> config).find(
+                new SingleFindQuery<>(QUERY, Fields.NUMBER,
+                        new ColumnList().get(Fields.ID, CompletableFuture.completedFuture(this.id())))
+        );
     }
 
     @Override
@@ -77,10 +81,15 @@ public final class Customer implements DatabaseEntity<Long> {
         }
     }
 
+    @Override
+    public co.ecso.jdao.ApplicationConfig config() {
+        return this.config;
+    }
+
     static final class Fields {
-        public static final DatabaseField<Long> ID = new DatabaseField<>("id", -1L, Types.BIGINT);
-        public static final DatabaseField<Long> NUMBER = new DatabaseField<>("customer_number", -1L, Types.BIGINT);
-        public static final DatabaseField<String> FIRST_NAME = new DatabaseField<>("customer_first_name", "", Types.VARCHAR);
-        public static final DatabaseField<String> LAST_NAME = new DatabaseField<>("customer_last_name", "", Types.VARCHAR);
+        static final DatabaseField<Long> ID = new DatabaseField<>("id", -1L, Types.BIGINT);
+        static final DatabaseField<Long> NUMBER = new DatabaseField<>("customer_number", -1L, Types.BIGINT);
+        static final DatabaseField<String> FIRST_NAME = new DatabaseField<>("customer_first_name", "", Types.VARCHAR);
+        static final DatabaseField<String> LAST_NAME = new DatabaseField<>("customer_last_name", "", Types.VARCHAR);
     }
 }

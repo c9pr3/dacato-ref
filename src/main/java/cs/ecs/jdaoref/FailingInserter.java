@@ -1,11 +1,9 @@
 package cs.ecs.jdaoref;
 
-import co.ecso.jdao.ApplicationConfig;
-import co.ecso.jdao.Query;
+import co.ecso.jdao.Inserter;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * FailingInserter.
@@ -16,11 +14,10 @@ import java.util.concurrent.CompletableFuture;
  * @version $Id:$
  * @since 29.08.16
  */
-public interface FailingInserter<T> extends co.ecso.jdao.Inserter<T> {
+interface FailingInserter<T> extends Inserter<T> {
 
     @Override
-    default void getResult(Query query, CompletableFuture<T> retValFuture, PreparedStatement stmt) throws SQLException {
-        retValFuture.completeExceptionally(new Exception("foo"));
+    default T getResult(final String query, final PreparedStatement stmt) throws SQLException {
+        throw new SQLException("foo");
     }
-
 }

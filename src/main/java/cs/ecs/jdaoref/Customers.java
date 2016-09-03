@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
  * @version $Id:$
  * @since 15.03.16
  */
+@SuppressWarnings("WeakerAccess")
 public final class Customers {
 
     private final ApplicationConfig config;
@@ -23,12 +24,14 @@ public final class Customers {
     }
 
     CompletableFuture<Boolean> removeAll() {
-        return ((Truncater) () -> config).truncate(new Query("TRUNCATE TABLE customer"));
+        return ((Truncater) () -> config).truncate("TRUNCATE TABLE customer");
     }
 
     CompletableFuture<Customer> findOne(final CompletableFuture<Long> id) {
-        return ((Finder<Long>) () -> config).findOne(new Query("SELECT %s FROM customer WHERE id = ?"),
-                Customer.Fields.ID, id).thenApply(id1 -> new Customer(config, id1));
+        return ((SingleColumnFinder<Long>) () -> config).find(
+                new SingleFindQuery<>("SELECT %s FROM customer WHERE %s = ?",
+                        Customer.Fields.ID, new ColumnList().get(Customer.Fields.ID, id)))
+                .thenApply(id1 -> new Customer(config, id1));
     }
 
     public CompletableFuture<Customer> add(final String customerFirstName, final String customerLastName,
@@ -38,31 +41,33 @@ public final class Customers {
         map.put(Customer.Fields.LAST_NAME, customerLastName);
         map.put(Customer.Fields.NUMBER, customerNumber);
         return ((Inserter<Long>) () -> config)
-                .insert(new Query("INSERT INTO customer VALUES (null, ?, ?, ?)"), map)
+                .insert("INSERT INTO customer VALUES (null, ?, ?, ?)", map)
                 .thenApply(id -> new Customer(config, id));
     }
 
     public CompletableFuture<List<Customer>> findAll() {
-        return ((Finder<Long>) () -> config).findMany(new Query("SELECT %s FROM customer"),
-                Customer.Fields.ID, new HashMap<>())
-                .thenApply(longList -> longList.stream().map(l -> new Customer(config, l)).collect(Collectors.toList()));
+        return ((SingleColumnFinder<Long>) () -> config).find(
+                new ListFindQuery<>("SELECT %s FROM customer", Customer.Fields.ID)
+        ).thenApply(longList -> longList.stream().map(l -> new Customer(config, l)).collect(Collectors.toList()));
     }
 
-    public CompletableFuture<List<?>> findIdAndFirstNameByID(final CompletableFuture<Long> id,
+    public CompletableFuture<List<List<?>>> findIdAndFirstNameByID(final CompletableFuture<Long> id,
                                                              final CompletableFuture<String> firstName) {
 
-        final Query query = new Query("SELECT %s, %s, %s FROM customer WHERE %s = ? AND %s = ?");
+        final List<DatabaseField<?>> columnsToSelect = new LinkedList<>();
+        columnsToSelect.add(Customer.Fields.ID);
+        columnsToSelect.add(Customer.Fields.FIRST_NAME);
+        columnsToSelect.add(Customer.Fields.LAST_NAME);
 
-        final List<DatabaseField<?>> columnsToReturn = new LinkedList<>();
-        columnsToReturn.add(Customer.Fields.ID);
-        columnsToReturn.add(Customer.Fields.FIRST_NAME);
-        columnsToReturn.add(Customer.Fields.LAST_NAME);
+        final Map<DatabaseField<?>, CompletableFuture<?>> columnsWhere = new HashMap<>();
+        columnsWhere.put(Customer.Fields.ID, id);
+        columnsWhere.put(Customer.Fields.FIRST_NAME, firstName);
 
-        final Map<DatabaseField<?>, CompletableFuture<?>> columnsToSelect = new HashMap<>();
-        columnsToSelect.put(Customer.Fields.ID, id);
-        columnsToSelect.put(Customer.Fields.FIRST_NAME, firstName);
-
-        return ((MultipleReturnFinder<?>) cs.ecs.jdaoref.ApplicationConfig::new)
-                .findMultiple(query, columnsToReturn, columnsToSelect);
+        MultipleFindQuery query = new MultipleFindQuery (
+                "SELECT %s, %s, %s FROM customer WHERE %s = ? AND %s = ?",
+                columnsToSelect,
+                columnsWhere
+        );
+        return ((MultipleColumnFinder) () -> config).find(query);
     }
 }
