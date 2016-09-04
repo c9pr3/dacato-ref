@@ -1,9 +1,7 @@
 package cs.ecs.jdaoref;
 
-import co.ecso.jdao.database.ColumnList;
 import co.ecso.jdao.database.DatabaseEntity;
 import co.ecso.jdao.database.DatabaseField;
-import co.ecso.jdao.database.SingleFindQuery;
 
 import java.sql.SQLException;
 import java.sql.Types;
@@ -39,23 +37,17 @@ public final class Customer implements DatabaseEntity<Long> {
 
     public CompletableFuture<String> firstName() {
         this.checkValidity();
-        return find(new SingleFindQuery<>(QUERY, Fields.FIRST_NAME,
-                new ColumnList().get(Fields.ID, CompletableFuture.completedFuture(this.id())))
-        );
+        return this.findById(QUERY, Fields.FIRST_NAME, Fields.ID);
     }
 
     public CompletableFuture<String> lastName() {
         this.checkValidity();
-        return find(new SingleFindQuery<>(QUERY, Fields.LAST_NAME,
-                new ColumnList().get(Fields.ID, CompletableFuture.completedFuture(this.id())))
-        );
+        return this.findById(QUERY, Fields.LAST_NAME, Fields.ID);
     }
 
     public CompletableFuture<Long> number() {
         this.checkValidity();
-        return find(new SingleFindQuery<>(QUERY, Fields.NUMBER,
-                new ColumnList().get(Fields.ID, CompletableFuture.completedFuture(this.id())))
-        );
+        return this.findById(QUERY, Fields.NUMBER, Fields.ID);
     }
 
     @Override

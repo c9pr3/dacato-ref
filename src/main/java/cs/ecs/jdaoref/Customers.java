@@ -29,7 +29,7 @@ public final class Customers implements DatabaseTable<Long> {
 
     CompletableFuture<Customer> findOne(final CompletableFuture<Long> id) {
         return find(new SingleFindQuery<>("SELECT %s FROM customer WHERE %s = ?",
-                Customer.Fields.ID, new ColumnList().get(Customer.Fields.ID, id)))
+                Customer.Fields.ID, ColumnList.build(Customer.Fields.ID, id)))
                 .thenApply(id1 -> new Customer(config, id1));
     }
 
