@@ -36,10 +36,10 @@ public final class Customers implements DatabaseTable<Long> {
     public CompletableFuture<Customer> add(final String customerFirstName, final String customerLastName,
                                            final long customerNumber) {
         final Map<DatabaseField<?>, Object> map = new LinkedHashMap<>();
-        map.put(Customer.Fields.FIRST_NAME, customerFirstName);
-        map.put(Customer.Fields.LAST_NAME, customerLastName);
-        map.put(Customer.Fields.NUMBER, customerNumber);
-        return insert("INSERT INTO customer VALUES (null, ?, ?, ?)", map).thenApply(id -> new Customer(config, id));
+        return insert("INSERT INTO customer VALUES (null, ?, ?, ?)",
+                new ColumnList().keys(Customer.Fields.FIRST_NAME, Customer.Fields.LAST_NAME, Customer.Fields.NUMBER)
+                .values(customerFirstName, customerLastName, customerNumber).build()
+                ).thenApply(id -> new Customer(config, id));
     }
 
     public CompletableFuture<List<Customer>> findAll() {
@@ -48,8 +48,7 @@ public final class Customers implements DatabaseTable<Long> {
     }
 
     public CompletableFuture<List<List<?>>> findIdAndFirstNameByID(final CompletableFuture<Long> id,
-                                                             final CompletableFuture<String> firstName) {
-
+                                                                   final CompletableFuture<String> firstName) {
         final List<DatabaseField<?>> columnsToSelect = new LinkedList<>();
         columnsToSelect.add(Customer.Fields.ID);
         columnsToSelect.add(Customer.Fields.FIRST_NAME);

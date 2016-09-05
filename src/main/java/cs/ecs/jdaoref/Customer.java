@@ -1,7 +1,9 @@
 package cs.ecs.jdaoref;
 
+import co.ecso.jdao.database.ColumnList;
 import co.ecso.jdao.database.DatabaseEntity;
 import co.ecso.jdao.database.DatabaseField;
+import co.ecso.jdao.database.SingleFindQuery;
 
 import java.sql.SQLException;
 import java.sql.Types;
@@ -19,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @SuppressWarnings("WeakerAccess")
 public final class Customer implements DatabaseEntity<Long> {
     private static final String TABLE_NAME = "customer";
-    private static final String QUERY = String.format("SELECT %%s FROM %s WHERE id = ?", TABLE_NAME);
+    private static final String QUERY = String.format("SELECT %%s FROM %s WHERE %%s = ?", TABLE_NAME);
     private final Long id;
     private final ApplicationConfig config;
     private AtomicBoolean invalid = new AtomicBoolean(false);
@@ -54,17 +56,16 @@ public final class Customer implements DatabaseEntity<Long> {
     public CompletableFuture<? extends DatabaseEntity> save(final Map<DatabaseField<?>, ?> valuesMap,
                                                             final Map<DatabaseField<?>, ?> whereMap) {
         this.checkValidity();
-
-        //TODO
-        return null;
+        return this.update("UPDATE customer SET %s WHERE %s", valuesMap, whereMap)
+                .thenCompose(rVal -> find(new SingleFindQuery<>(QUERY, Fields.ID,
+                        ColumnList.build(Fields.ID, CompletableFuture.completedFuture(id))))
+                        .thenApply(id1 -> new Customer(config, id1)));
     }
 
     @Override
     public String toJson() throws SQLException {
         this.checkValidity();
-
-        //TODO
-        return "";
+        return "{}";
     }
 
     @Override
