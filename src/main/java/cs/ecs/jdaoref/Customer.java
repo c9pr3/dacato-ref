@@ -30,7 +30,7 @@ public final class Customer implements DatabaseEntity<Long> {
      * Construct.
      *
      * @param config Config.
-     * @param id ID.
+     * @param id     ID.
      */
     public Customer(final ApplicationConfig config, final long id) {
         this.id = id;
@@ -102,15 +102,15 @@ public final class Customer implements DatabaseEntity<Long> {
     }
 
     static final class Fields {
+        static final DatabaseField<Long> ID = new DatabaseField<>("id", -1L, Types.BIGINT);
+        static final DatabaseField<Long> NUMBER = new DatabaseField<>("customer_number", -1L, Types.BIGINT);
+        static final DatabaseField<String> FIRST_NAME = new DatabaseField<>("customer_first_name", "", Types.VARCHAR);
+        static final DatabaseField<String> LAST_NAME = new DatabaseField<>("customer_last_name", "", Types.VARCHAR);
         /**
          * Private constructor.
          */
         private Fields() {
             //unused
         }
-        static final DatabaseField<Long> ID = new DatabaseField<>("id", -1L, Types.BIGINT);
-        static final DatabaseField<Long> NUMBER = new DatabaseField<>("customer_number", -1L, Types.BIGINT);
-        static final DatabaseField<String> FIRST_NAME = new DatabaseField<>("customer_first_name", "", Types.VARCHAR);
-        static final DatabaseField<String> LAST_NAME = new DatabaseField<>("customer_last_name", "", Types.VARCHAR);
     }
 }

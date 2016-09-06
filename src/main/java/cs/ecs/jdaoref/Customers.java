@@ -52,8 +52,8 @@ public final class Customers implements DatabaseTable<Long> {
      * Add a new entity.
      *
      * @param customerFirstName First Name.
-     * @param customerLastName Last Name.
-     * @param customerNumber Number.
+     * @param customerLastName  Last Name.
+     * @param customerNumber    Number.
      * @return Newly created entity.
      */
     public CompletableFuture<Customer> add(final String customerFirstName, final String customerLastName,
@@ -61,8 +61,8 @@ public final class Customers implements DatabaseTable<Long> {
         final Map<DatabaseField<?>, Object> map = new LinkedHashMap<>();
         return insert("INSERT INTO customer VALUES (null, ?, ?, ?)",
                 new ColumnList().keys(Customer.Fields.FIRST_NAME, Customer.Fields.LAST_NAME, Customer.Fields.NUMBER)
-                .values(customerFirstName, customerLastName, customerNumber).build()
-                ).thenApply(id -> new Customer(config, id));
+                        .values(customerFirstName, customerLastName, customerNumber).build()
+        ).thenApply(id -> new Customer(config, id));
     }
 
     /**
@@ -78,7 +78,7 @@ public final class Customers implements DatabaseTable<Long> {
     /**
      * Only find id and first name by id. Showoff.
      *
-     * @param id ID to find.
+     * @param id        ID to find.
      * @param firstName FirstName to find.
      * @return List of lists containing id and firstname.
      */
@@ -93,7 +93,7 @@ public final class Customers implements DatabaseTable<Long> {
         columnsWhere.put(Customer.Fields.ID, id);
         columnsWhere.put(Customer.Fields.FIRST_NAME, firstName);
 
-        MultipleFindQuery query = new MultipleFindQuery (
+        MultipleFindQuery query = new MultipleFindQuery(
                 "SELECT %s, %s, %s FROM customer WHERE %s = ? AND %s = ?",
                 columnsToSelect,
                 columnsWhere
