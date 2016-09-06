@@ -17,10 +17,10 @@ import java.util.concurrent.ThreadFactory;
  * @version $Id:$
  * @since 29.08.16
  */
-public final class ApplicationConfig implements co.ecso.jdao.config.ApplicationConfig {
+final class ApplicationConfig implements co.ecso.jdao.config.ApplicationConfig {
 
-    private static snaq.db.ConnectionPool CONNECTION_POOL;
-    private static ThreadFactory THREAD_FACTORY_BUILDER;
+    private static snaq.db.ConnectionPool connectionPool;
+    private static ThreadFactory threadFactoryBuilder;
 
     @Override
     public String getMysqlHost() {
@@ -68,28 +68,34 @@ public final class ApplicationConfig implements co.ecso.jdao.config.ApplicationC
     }
 
     @Override
-    public ScheduledExecutorService getThreadPool() {
-        if (THREAD_FACTORY_BUILDER == null) {
-            THREAD_FACTORY_BUILDER = new ThreadFactoryBuilder()
-                    .setNameFormat(this.getPoolName() + "-%d").build();
+    public synchronized ScheduledExecutorService getThreadPool() {
+        //noinspection SynchronizeOnNonFinalField
+        synchronized (threadFactoryBuilder) {
+            if (threadFactoryBuilder == null) {
+                threadFactoryBuilder = new ThreadFactoryBuilder()
+                        .setNameFormat(this.getPoolName() + "-%d").build();
+            }
+            return Executors.newSingleThreadScheduledExecutor(threadFactoryBuilder);
         }
-        return Executors.newSingleThreadScheduledExecutor(THREAD_FACTORY_BUILDER);
     }
 
     @Override
     public ConnectionPool<Connection> getConnectionPool() {
-        if (CONNECTION_POOL == null) {
-            CONNECTION_POOL = new snaq.db.ConnectionPool(getPoolName(), getMinPoolSize(),
-                    getMaxPoolSize(), getPoolMaxSize(), getPoolIdleTimeout(),
-                    getConnectString(), null);
-            ConnectionPoolManager.registerGlobalShutdownHook();
-        }
-        return () -> {
-            final Connection connection = CONNECTION_POOL.getConnection(getPoolIdleTimeout());
-            if (connection == null) {
-                throw new SQLException("Could not get connection from pool");
+        //noinspection SynchronizeOnNonFinalField
+        synchronized (connectionPool) {
+            if (connectionPool == null) {
+                connectionPool = new snaq.db.ConnectionPool(getPoolName(), getMinPoolSize(),
+                        getMaxPoolSize(), getPoolMaxSize(), getPoolIdleTimeout(),
+                        getConnectString(), null);
+                ConnectionPoolManager.registerGlobalShutdownHook();
             }
-            return connection;
-        };
+            return () -> {
+                final Connection connection = connectionPool.getConnection(getPoolIdleTimeout());
+                if (connection == null) {
+                    throw new SQLException("Could not get connection from pool");
+                }
+                return connection;
+            };
+        }
     }
 }

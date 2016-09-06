@@ -14,8 +14,14 @@ import java.util.concurrent.CompletableFuture;
  * @since 28.08.16
  */
 public final class CachedDatabaseConnection extends CachingConnectionWrapper {
-    private static Cache<CacheKey<?>, CompletableFuture<?>> CACHE = new ApplicationCache();
+    private static final Cache<CacheKey<?>, CompletableFuture<?>> CACHE = new ApplicationCache();
 
+    /**
+     * Construct.
+     *
+     * @param config Configuration.
+     * @throws SQLException if connection could not be catched from pool
+     */
     public CachedDatabaseConnection(final ApplicationConfig config) throws SQLException {
         super(config, CACHE);
     }

@@ -26,6 +26,12 @@ public final class Customer implements DatabaseEntity<Long> {
     private final ApplicationConfig config;
     private AtomicBoolean invalid = new AtomicBoolean(false);
 
+    /**
+     * Construct.
+     *
+     * @param config Config.
+     * @param id ID.
+     */
     public Customer(final ApplicationConfig config, final long id) {
         this.id = id;
         this.config = config;
@@ -37,16 +43,31 @@ public final class Customer implements DatabaseEntity<Long> {
         return this.id;
     }
 
+    /**
+     * Get first name.
+     *
+     * @return first name.
+     */
     public CompletableFuture<String> firstName() {
         this.checkValidity();
         return this.findById(QUERY, Fields.FIRST_NAME, Fields.ID);
     }
 
+    /**
+     * Get last name.
+     *
+     * @return last name.
+     */
     public CompletableFuture<String> lastName() {
         this.checkValidity();
         return this.findById(QUERY, Fields.LAST_NAME, Fields.ID);
     }
 
+    /**
+     * Get number.
+     *
+     * @return number.
+     */
     public CompletableFuture<Long> number() {
         this.checkValidity();
         return this.findById(QUERY, Fields.NUMBER, Fields.ID);
@@ -81,6 +102,12 @@ public final class Customer implements DatabaseEntity<Long> {
     }
 
     static final class Fields {
+        /**
+         * Private constructor.
+         */
+        private Fields() {
+            //unused
+        }
         static final DatabaseField<Long> ID = new DatabaseField<>("id", -1L, Types.BIGINT);
         static final DatabaseField<Long> NUMBER = new DatabaseField<>("customer_number", -1L, Types.BIGINT);
         static final DatabaseField<String> FIRST_NAME = new DatabaseField<>("customer_first_name", "", Types.VARCHAR);

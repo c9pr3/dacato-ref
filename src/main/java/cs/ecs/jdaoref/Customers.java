@@ -18,21 +18,44 @@ public final class Customers implements DatabaseTable<Long> {
 
     private final ApplicationConfig config;
 
+    /**
+     * Construct.
+     *
+     * @param config Config.
+     */
     public Customers(final ApplicationConfig config) {
-        Objects.requireNonNull(config);
         this.config = config;
     }
 
+    /**
+     * Remove all entries.
+     *
+     * @return True if truncating succeeded.
+     */
     CompletableFuture<Boolean> removeAll() {
         return truncate("TRUNCATE TABLE customer");
     }
 
+    /**
+     * Find one by id.
+     *
+     * @param id ID
+     * @return Found entity.
+     */
     CompletableFuture<Customer> findOne(final CompletableFuture<Long> id) {
         return find(new SingleFindQuery<>("SELECT %s FROM customer WHERE %s = ?",
                 Customer.Fields.ID, ColumnList.build(Customer.Fields.ID, id)))
                 .thenApply(id1 -> new Customer(config, id1));
     }
 
+    /**
+     * Add a new entity.
+     *
+     * @param customerFirstName First Name.
+     * @param customerLastName Last Name.
+     * @param customerNumber Number.
+     * @return Newly created entity.
+     */
     public CompletableFuture<Customer> add(final String customerFirstName, final String customerLastName,
                                            final long customerNumber) {
         final Map<DatabaseField<?>, Object> map = new LinkedHashMap<>();
@@ -42,11 +65,23 @@ public final class Customers implements DatabaseTable<Long> {
                 ).thenApply(id -> new Customer(config, id));
     }
 
+    /**
+     * Find all entities.
+     *
+     * @return List of entities found.
+     */
     public CompletableFuture<List<Customer>> findAll() {
         return find(new ListFindQuery<>("SELECT %s FROM customer", Customer.Fields.ID))
                 .thenApply(longList -> longList.stream().map(l -> new Customer(config, l)).collect(Collectors.toList()));
     }
 
+    /**
+     * Only find id and first name by id. Showoff.
+     *
+     * @param id ID to find.
+     * @param firstName FirstName to find.
+     * @return List of lists containing id and firstname.
+     */
     public CompletableFuture<List<List<?>>> findIdAndFirstNameByID(final CompletableFuture<Long> id,
                                                                    final CompletableFuture<String> firstName) {
         final List<DatabaseField<?>> columnsToSelect = new LinkedList<>();
