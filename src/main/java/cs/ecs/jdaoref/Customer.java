@@ -1,13 +1,9 @@
 package cs.ecs.jdaoref;
 
-import co.ecso.jdao.database.ColumnList;
-import co.ecso.jdao.database.DatabaseEntity;
-import co.ecso.jdao.database.DatabaseField;
-import co.ecso.jdao.database.SingleFindQuery;
+import co.ecso.jdao.database.*;
 
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -18,7 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @version $Id:$
  * @since 29.08.16
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "unused"})
 public final class Customer implements DatabaseEntity<Long> {
     private static final String TABLE_NAME = "customer";
     private static final String QUERY = String.format("SELECT %%s FROM %s WHERE %%s = ?", TABLE_NAME);
@@ -48,9 +44,9 @@ public final class Customer implements DatabaseEntity<Long> {
      *
      * @return first name.
      */
-    public CompletableFuture<String> firstName() {
+    public CompletableFuture<DatabaseResultField<String>> firstName() {
         this.checkValidity();
-        return this.findById(QUERY, Fields.FIRST_NAME, Fields.ID);
+        return this.findOne(new SingleColumnQuery<>(QUERY, Fields.FIRST_NAME, Fields.ID, this.id()));
     }
 
     /**
@@ -58,9 +54,9 @@ public final class Customer implements DatabaseEntity<Long> {
      *
      * @return last name.
      */
-    public CompletableFuture<String> lastName() {
+    public CompletableFuture<DatabaseResultField<String>> lastName() {
         this.checkValidity();
-        return this.findById(QUERY, Fields.LAST_NAME, Fields.ID);
+        return this.findOne(new SingleColumnQuery<>(QUERY, Fields.LAST_NAME, Fields.ID, this.id()));
     }
 
     /**
@@ -68,19 +64,16 @@ public final class Customer implements DatabaseEntity<Long> {
      *
      * @return number.
      */
-    public CompletableFuture<Long> number() {
+    public CompletableFuture<DatabaseResultField<Long>> number() {
         this.checkValidity();
-        return this.findById(QUERY, Fields.NUMBER, Fields.ID);
+        return this.findOne(new SingleColumnQuery<>(QUERY, Fields.NUMBER, Fields.ID, this.id()));
     }
 
     @Override
-    public CompletableFuture<? extends DatabaseEntity> save(final Map<DatabaseField<?>, ?> valuesMap,
-                                                            final Map<DatabaseField<?>, ?> whereMap) {
-        this.checkValidity();
-        return this.update("UPDATE customer SET %s WHERE %s", valuesMap, whereMap)
-                .thenCompose(rVal -> find(new SingleFindQuery<>(QUERY, Fields.ID,
-                        ColumnList.build(Fields.ID, CompletableFuture.completedFuture(id))))
-                        .thenApply(id1 -> new Customer(config, id1)));
+    public CompletableFuture<Boolean> save(final SingleColumnUpdateQuery<Long> query) {
+        final CompletableFuture<Boolean> updated = this.update(query);
+        this.invalid.set(true);
+        return updated;
     }
 
     @Override
@@ -102,10 +95,12 @@ public final class Customer implements DatabaseEntity<Long> {
     }
 
     static final class Fields {
-        static final DatabaseField<Long> ID = new DatabaseField<>("id", -1L, Types.BIGINT);
-        static final DatabaseField<Long> NUMBER = new DatabaseField<>("customer_number", -1L, Types.BIGINT);
-        static final DatabaseField<String> FIRST_NAME = new DatabaseField<>("customer_first_name", "", Types.VARCHAR);
-        static final DatabaseField<String> LAST_NAME = new DatabaseField<>("customer_last_name", "", Types.VARCHAR);
+        static final DatabaseField<Long> ID = new DatabaseField<>("id", Long.class, Types.BIGINT);
+        static final DatabaseField<Long> NUMBER = new DatabaseField<>("customer_number", Long.class, Types.BIGINT);
+        static final DatabaseField<String> FIRST_NAME =
+                new DatabaseField<>("customer_first_name", String.class, Types.VARCHAR);
+        static final DatabaseField<String> LAST_NAME =
+                new DatabaseField<>("customer_last_name", String.class, Types.VARCHAR);
         /**
          * Private constructor.
          */

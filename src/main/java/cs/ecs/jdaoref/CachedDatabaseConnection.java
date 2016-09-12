@@ -1,7 +1,7 @@
 package cs.ecs.jdaoref;
 
 import co.ecso.jdao.cache.Cache;
-import co.ecso.jdao.cache.CachingConnectionWrapper;
+import co.ecso.jdao.cache.CacheKey;
 
 import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
@@ -13,7 +13,8 @@ import java.util.concurrent.CompletableFuture;
  * @version $Id:$
  * @since 28.08.16
  */
-public final class CachedDatabaseConnection extends CachingConnectionWrapper {
+@SuppressWarnings("unused")
+public final class CachedDatabaseConnection {
     private static final Cache<CacheKey<?>, CompletableFuture<?>> CACHE = new ApplicationCache();
 
     /**
@@ -23,7 +24,7 @@ public final class CachedDatabaseConnection extends CachingConnectionWrapper {
      * @throws SQLException if connection could not be catched from pool
      */
     public CachedDatabaseConnection(final ApplicationConfig config) throws SQLException {
-        super(config, CACHE);
+//        super(config, CACHE);
     }
 
 }

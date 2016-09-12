@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
  * @version $Id:$
  * @since 15.03.16
  */
-@SuppressWarnings("WeakerAccess")
-public final class Customers implements DatabaseTable<Long> {
+@SuppressWarnings({"WeakerAccess", "unused"})
+public final class Customers implements DatabaseTable<Long, Customer> {
 
     private final ApplicationConfig config;
 
@@ -42,10 +42,10 @@ public final class Customers implements DatabaseTable<Long> {
      * @param id ID
      * @return Found entity.
      */
-    CompletableFuture<Customer> findOne(final CompletableFuture<Long> id) {
-        return find(new SingleFindQuery<>("SELECT %s FROM customer WHERE %s = ?",
-                Customer.Fields.ID, ColumnList.build(Customer.Fields.ID, id)))
-                .thenApply(id1 -> new Customer(config, id1));
+    @Override
+    public CompletableFuture<Customer> findOne(final Long id) {
+        return this.findOne(new SingleColumnQuery<>("SELECT %s FROM customer WHERE %s = ?", Customer.Fields.ID,
+                Customer.Fields.ID, id)).thenApply(foundId -> new Customer(config, foundId.value()));
     }
 
     /**
@@ -58,11 +58,12 @@ public final class Customers implements DatabaseTable<Long> {
      */
     public CompletableFuture<Customer> add(final String customerFirstName, final String customerLastName,
                                            final long customerNumber) {
-        final Map<DatabaseField<?>, Object> map = new LinkedHashMap<>();
-        return insert("INSERT INTO customer VALUES (null, ?, ?, ?)",
-                new ColumnList().keys(Customer.Fields.FIRST_NAME, Customer.Fields.LAST_NAME, Customer.Fields.NUMBER)
-                        .values(customerFirstName, customerLastName, customerNumber).build()
-        ).thenApply(id -> new Customer(config, id));
+        final InsertQuery<Long> query = new InsertQuery<>("INSERT INTO customer (%s, %s, %s, %s) " +
+                "VALUES (null, ?, ?, ?)", Customer.Fields.ID);
+        query.add(Customer.Fields.FIRST_NAME, customerFirstName)
+                .add(Customer.Fields.LAST_NAME, customerLastName)
+                .add(Customer.Fields.NUMBER, customerNumber);
+        return add(query).thenApply(id -> new Customer(config, id.value()));
     }
 
     /**
@@ -70,35 +71,11 @@ public final class Customers implements DatabaseTable<Long> {
      *
      * @return List of entities found.
      */
+    @Override
     public CompletableFuture<List<Customer>> findAll() {
-        return find(new ListFindQuery<>("SELECT %s FROM customer", Customer.Fields.ID))
-                .thenApply(longList -> longList.stream().map(l -> new Customer(config, l)).collect(Collectors.toList()));
-    }
-
-    /**
-     * Only find id and first name by id. Showoff.
-     *
-     * @param id        ID to find.
-     * @param firstName FirstName to find.
-     * @return List of lists containing id and firstname.
-     */
-    public CompletableFuture<List<List<?>>> findIdAndFirstNameByID(final CompletableFuture<Long> id,
-                                                                   final CompletableFuture<String> firstName) {
-        final List<DatabaseField<?>> columnsToSelect = new LinkedList<>();
-        columnsToSelect.add(Customer.Fields.ID);
-        columnsToSelect.add(Customer.Fields.FIRST_NAME);
-        columnsToSelect.add(Customer.Fields.LAST_NAME);
-
-        final Map<DatabaseField<?>, CompletableFuture<?>> columnsWhere = new HashMap<>();
-        columnsWhere.put(Customer.Fields.ID, id);
-        columnsWhere.put(Customer.Fields.FIRST_NAME, firstName);
-
-        MultipleFindQuery query = new MultipleFindQuery(
-                "SELECT %s, %s, %s FROM customer WHERE %s = ? AND %s = ?",
-                columnsToSelect,
-                columnsWhere
-        );
-        return find(query);
+        return this.findMany(new SingleColumnQuery<>("SELECT %s FROM customer", Customer.Fields.ID))
+                .thenApply(list -> list.stream().map(foundId -> new Customer(config, foundId.value()))
+                        .collect(Collectors.toList()));
     }
 
     @Override
