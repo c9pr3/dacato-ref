@@ -48,6 +48,13 @@ public final class Customers implements DatabaseTable<Long, Customer> {
                 Customer.Fields.ID, id)).thenApply(foundId -> new Customer(config, foundId.value()));
     }
 
+    final CompletableFuture<Customer> findOneByFirstName(final String firstName) {
+        final SingleColumnQuery<Long, String> query = new SingleColumnQuery<>("SELECT %s FROM customer WHERE %s = ?",
+                Customer.Fields.ID,
+                Customer.Fields.FIRST_NAME, firstName);
+        return this.findOne(query).thenApply(foundId -> new Customer(config, foundId.value()));
+    }
+
     /**
      * Add a new entity.
      *
@@ -60,9 +67,9 @@ public final class Customers implements DatabaseTable<Long, Customer> {
                                            final long customerNumber) {
         final InsertQuery<Long> query = new InsertQuery<>("INSERT INTO customer (%s, %s, %s, %s) " +
                 "VALUES (null, ?, ?, ?)", Customer.Fields.ID);
-        query.add(Customer.Fields.FIRST_NAME, customerFirstName)
-                .add(Customer.Fields.LAST_NAME, customerLastName)
-                .add(Customer.Fields.NUMBER, customerNumber);
+        query.add(Customer.Fields.FIRST_NAME, customerFirstName);
+        query.add(Customer.Fields.LAST_NAME, customerLastName);
+        query.add(Customer.Fields.NUMBER, customerNumber);
         return add(query).thenApply(id -> new Customer(config, id.value()));
     }
 
