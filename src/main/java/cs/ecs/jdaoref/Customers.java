@@ -55,6 +55,17 @@ public final class Customers implements DatabaseTable<Long, Customer> {
         return this.findOne(query).thenApply(foundId -> new Customer(config, foundId.value()));
     }
 
+    public CompletableFuture<Customer> findOneByFirstNameAndLastName(final String firstName, final String lastName) {
+        final ColumnList values = () -> new HashMap<DatabaseField<?>, Object>() {
+            {
+                put(Customer.Fields.FIRST_NAME, "foo1");
+                put(Customer.Fields.LAST_NAME, "foo1");
+            }
+        };
+        return findOne(new MultiColumnQuery<>("SELECT %s FROM customer WHERE %s = ? AND %s = ?",
+                Customer.Fields.ID, values)).thenApply(id -> new Customer(config, id.value()));
+    }
+
     /**
      * Add a new entity.
      *
