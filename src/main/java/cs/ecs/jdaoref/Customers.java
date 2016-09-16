@@ -1,6 +1,10 @@
 package cs.ecs.jdaoref;
 
 import co.ecso.jdao.database.*;
+import co.ecso.jdao.database.query.DatabaseField;
+import co.ecso.jdao.database.query.InsertQuery;
+import co.ecso.jdao.database.query.MultiColumnQuery;
+import co.ecso.jdao.database.query.SingleColumnQuery;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;

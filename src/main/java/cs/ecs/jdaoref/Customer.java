@@ -1,6 +1,10 @@
 package cs.ecs.jdaoref;
 
 import co.ecso.jdao.database.*;
+import co.ecso.jdao.database.query.DatabaseField;
+import co.ecso.jdao.database.query.DatabaseResultField;
+import co.ecso.jdao.database.query.SingleColumnQuery;
+import co.ecso.jdao.database.query.SingleColumnUpdateQuery;
 
 import java.sql.SQLException;
 import java.sql.Types;
