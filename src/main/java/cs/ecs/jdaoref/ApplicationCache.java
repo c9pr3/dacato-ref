@@ -1,12 +1,10 @@
 package cs.ecs.jdaoref;
 
 import co.ecso.jdao.database.cache.Cache;
-import co.ecso.jdao.database.cache.CacheKey;
 import com.google.common.cache.CacheBuilder;
 
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -17,33 +15,32 @@ import java.util.concurrent.TimeUnit;
  * @version $Id:$
  * @since 04.09.16
  */
-final class ApplicationCache implements Cache<CacheKey<?>, CompletableFuture<?>> {
-    private static final com.google.common.cache.Cache<CacheKey<?>, CompletableFuture<?>>
+public final class ApplicationCache<K, V> implements Cache<K, V> {
+    private final com.google.common.cache.Cache<K, V>
             CACHE = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.SECONDS).maximumSize(50).build();
 
     @Override
-    public CompletableFuture<?> getIfPresent(final CacheKey<?> key) {
+    public V getIfPresent(final K key) {
         return CACHE.getIfPresent(key);
     }
 
     @Override
-    public CompletableFuture<?> get(final CacheKey<?> var1,
-                                    final Callable<? extends CompletableFuture<?>> var2) throws ExecutionException {
+    public V get(final K var1, final Callable<? extends V> var2) throws ExecutionException {
         return CACHE.get(var1, var2);
     }
 
     @Override
-    public Map<CacheKey<?>, CompletableFuture<?>> getAllPresent(final Iterable<?> var1) {
+    public Map<K, V> getAllPresent(final Iterable<?> var1) {
         return CACHE.getAllPresent(var1);
     }
 
     @Override
-    public void put(final CacheKey<?> var1, final CompletableFuture<?> var2) {
+    public void put(final K var1, final V var2) {
         CACHE.put(var1, var2);
     }
 
     @Override
-    public void putAll(final Map<? extends CacheKey<?>, ? extends CompletableFuture<?>> var1) {
+    public void putAll(final Map<? extends K, ? extends V> var1) {
         CACHE.putAll(var1);
     }
 
@@ -71,5 +68,4 @@ final class ApplicationCache implements Cache<CacheKey<?>, CompletableFuture<?>>
     public void cleanUp() {
         CACHE.cleanUp();
     }
-
 }
