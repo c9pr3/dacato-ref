@@ -1,7 +1,7 @@
 package cs.ecs.jdaoref;
 
-import co.ecso.jdao.cache.Cache;
-import co.ecso.jdao.cache.CacheKey;
+import co.ecso.jdao.database.cache.Cache;
+import co.ecso.jdao.database.cache.CacheKey;
 
 import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;

@@ -1,6 +1,9 @@
 package cs.ecs.jdaoref;
 
 import co.ecso.jdao.database.*;
+import co.ecso.jdao.database.internals.EntityFinder;
+import co.ecso.jdao.database.internals.Inserter;
+import co.ecso.jdao.database.internals.Truncater;
 import co.ecso.jdao.database.query.DatabaseField;
 import co.ecso.jdao.database.query.InsertQuery;
 import co.ecso.jdao.database.query.MultiColumnQuery;
@@ -86,6 +89,24 @@ public final class Customers implements DatabaseTable<Long, Customer> {
         query.add(Customer.Fields.LAST_NAME, customerLastName);
         query.add(Customer.Fields.NUMBER, customerNumber);
         return add(query).thenApply(id -> new Customer(config, id.value()));
+    }
+
+    // Just to show it is possible
+    @Override
+    public Truncater truncater() {
+        return new MyTruncater();
+    }
+
+    // Just to show it is possible
+    @Override
+    public Inserter<Long, Customer> inserter() {
+        return new MyInserter<>();
+    }
+
+    // Just to show it is possible
+    @Override
+    public EntityFinder entityFinder() {
+        return new MyEntityFinder();
     }
 
     /**
