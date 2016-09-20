@@ -5,9 +5,9 @@ import co.ecso.jdao.database.CachedDatabaseEntity;
 import co.ecso.jdao.database.ColumnList;
 import co.ecso.jdao.database.DatabaseEntity;
 import co.ecso.jdao.database.cache.Cache;
+import co.ecso.jdao.database.cache.CacheKey;
 import co.ecso.jdao.database.query.DatabaseField;
 import co.ecso.jdao.database.query.DatabaseResultField;
-import co.ecso.jdao.database.query.Query;
 import co.ecso.jdao.database.query.SingleColumnQuery;
 
 import java.sql.SQLException;
@@ -25,8 +25,6 @@ public final class CachedCustomer implements CachedDatabaseEntity<Long> {
 
     private final ApplicationConfig config;
     private final Long id;
-    private static final Cache<Query<Long>, CompletableFuture<DatabaseResultField<Long>>> CACHE =
-            new ApplicationCache<>();
     private static final String TABLE_NAME = "customer";
     private static final String QUERY = String.format("SELECT %%s FROM %s WHERE id = ?", TABLE_NAME);
 
@@ -61,8 +59,8 @@ public final class CachedCustomer implements CachedDatabaseEntity<Long> {
     }
 
     @Override
-    public Cache<Query<Long>, CompletableFuture<DatabaseResultField<Long>>> cache() {
-        return CACHE;
+    public Cache<CacheKey<?>, CompletableFuture<?>> cache() {
+        return cs.ecs.jdaoref.ApplicationConfig.CACHE;
     }
 
     public CompletableFuture<DatabaseResultField<String>> firstName() {

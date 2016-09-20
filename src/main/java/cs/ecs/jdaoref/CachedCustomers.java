@@ -3,6 +3,7 @@ package cs.ecs.jdaoref;
 import co.ecso.jdao.config.ApplicationConfig;
 import co.ecso.jdao.database.CachedDatabaseTable;
 import co.ecso.jdao.database.cache.Cache;
+import co.ecso.jdao.database.cache.CacheKey;
 import co.ecso.jdao.database.internals.Truncater;
 import co.ecso.jdao.database.query.DatabaseResultField;
 import co.ecso.jdao.database.query.InsertQuery;
@@ -58,7 +59,8 @@ public final class CachedCustomers implements CachedDatabaseTable<Long, Customer
     }
 
     @Override
-    public <K, V> Cache<K, V> cache() {
-        return (Cache<K, V>) CACHE;
+    public Cache<CacheKey<?>, CompletableFuture<?>> cache() {
+        return cs.ecs.jdaoref.ApplicationConfig.CACHE;
     }
+
 }

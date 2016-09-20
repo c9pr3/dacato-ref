@@ -1,11 +1,14 @@
 package cs.ecs.jdaoref;
 
 import co.ecso.jdao.connection.ConnectionPool;
+import co.ecso.jdao.database.cache.Cache;
+import co.ecso.jdao.database.cache.CacheKey;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import snaq.db.ConnectionPoolManager;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
@@ -21,6 +24,7 @@ final class ApplicationConfig implements co.ecso.jdao.config.ApplicationConfig {
 
     private static snaq.db.ConnectionPool connectionPool;
     private static ThreadFactory threadFactoryBuilder;
+    static final Cache<CacheKey<?>, CompletableFuture<?>> CACHE = new ApplicationCache<>();
 
     @Override
     public String getMysqlHost() {
