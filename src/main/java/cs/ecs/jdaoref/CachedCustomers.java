@@ -18,7 +18,8 @@ import java.util.concurrent.CompletableFuture;
  * @version $Id:$
  * @since 17.09.16
  */
-public final class CachedCustomers implements CachedDatabaseTable<Long, Customer> {
+@SuppressWarnings("unused")
+final class CachedCustomers implements CachedDatabaseTable<Long, Customer> {
 
     private final ApplicationConfig config;
     private static final Cache<CacheKey<Long>, CompletableFuture<DatabaseResultField<Long>>> CACHE =

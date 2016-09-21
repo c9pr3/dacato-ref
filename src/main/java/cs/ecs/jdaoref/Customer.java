@@ -1,12 +1,12 @@
 package cs.ecs.jdaoref;
 
-import co.ecso.jdao.database.*;
+import co.ecso.jdao.database.ColumnList;
+import co.ecso.jdao.database.DatabaseEntity;
 import co.ecso.jdao.database.query.DatabaseField;
 import co.ecso.jdao.database.query.DatabaseResultField;
 import co.ecso.jdao.database.query.SingleColumnQuery;
 import co.ecso.jdao.database.query.SingleColumnUpdateQuery;
 
-import java.sql.SQLException;
 import java.sql.Types;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -24,7 +24,7 @@ public final class Customer implements DatabaseEntity<Long> {
     private static final String QUERY = String.format("SELECT %%s FROM %s WHERE %%s = ?", TABLE_NAME);
     private final Long id;
     private final ApplicationConfig config;
-    private AtomicBoolean invalid = new AtomicBoolean(false);
+    private final AtomicBoolean invalid = new AtomicBoolean(false);
 
     /**
      * Construct.
@@ -80,11 +80,6 @@ public final class Customer implements DatabaseEntity<Long> {
         final CompletableFuture<Integer> updated = this.update(query);
         this.invalid.set(true);
         return updated.thenApply(l -> new Customer(config, id));
-    }
-
-    public String toJson() throws SQLException {
-        this.checkValidity();
-        return "{}";
     }
 
     @Override

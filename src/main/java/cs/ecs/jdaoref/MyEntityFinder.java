@@ -2,10 +2,6 @@ package cs.ecs.jdaoref;
 
 import co.ecso.jdao.database.internals.EntityFinder;
 import co.ecso.jdao.database.internals.StatementFiller;
-import co.ecso.jdao.database.query.DatabaseResultField;
-import co.ecso.jdao.database.query.SingleColumnQuery;
-
-import java.util.concurrent.CompletableFuture;
 
 /**
  * MyEntityFinder.
@@ -26,8 +22,4 @@ final class MyEntityFinder implements EntityFinder {
         return new MyStatementFiller();
     }
 
-    @Override
-    public <S, W> CompletableFuture<DatabaseResultField<S>> findOne(final SingleColumnQuery<S, W> query) {
-        return EntityFinder.super.findOne(query);
-    }
 }

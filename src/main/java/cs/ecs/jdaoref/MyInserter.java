@@ -33,7 +33,7 @@ final class MyInserter<T, R extends DatabaseEntity<T>> implements Inserter<T, R>
     }
 
     @Override
-    public CompletableFuture<DatabaseResultField<T>> add(InsertQuery<T> query) {
+    public CompletableFuture<DatabaseResultField<T>> add(final InsertQuery<T> query) {
         return Inserter.super.add(query);
     }
 

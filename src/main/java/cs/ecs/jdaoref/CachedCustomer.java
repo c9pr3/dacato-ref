@@ -10,7 +10,6 @@ import co.ecso.jdao.database.query.DatabaseField;
 import co.ecso.jdao.database.query.DatabaseResultField;
 import co.ecso.jdao.database.query.SingleColumnQuery;
 
-import java.sql.SQLException;
 import java.sql.Types;
 import java.util.concurrent.CompletableFuture;
 
@@ -21,14 +20,15 @@ import java.util.concurrent.CompletableFuture;
  * @version $Id:$
  * @since 17.09.16
  */
-public final class CachedCustomer implements CachedDatabaseEntity<Long> {
+@SuppressWarnings("unused")
+final class CachedCustomer implements CachedDatabaseEntity<Long> {
 
     private final ApplicationConfig config;
     private final Long id;
     private static final String TABLE_NAME = "customer";
     private static final String QUERY = String.format("SELECT %%s FROM %s WHERE id = ?", TABLE_NAME);
 
-    public CachedCustomer(final ApplicationConfig config, final Long id) {
+    CachedCustomer(final ApplicationConfig config, final Long id) {
         this.config = config;
         this.id = id;
     }
@@ -45,10 +45,6 @@ public final class CachedCustomer implements CachedDatabaseEntity<Long> {
 
     @Override
     public CompletableFuture<? extends DatabaseEntity<Long>> save(final ColumnList values) {
-        return null;
-    }
-
-    public String toJson() throws SQLException {
         return null;
     }
 

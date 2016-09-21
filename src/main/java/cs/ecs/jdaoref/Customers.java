@@ -1,6 +1,7 @@
 package cs.ecs.jdaoref;
 
-import co.ecso.jdao.database.*;
+import co.ecso.jdao.database.ColumnList;
+import co.ecso.jdao.database.DatabaseTable;
 import co.ecso.jdao.database.internals.EntityFinder;
 import co.ecso.jdao.database.internals.Inserter;
 import co.ecso.jdao.database.internals.Truncater;
@@ -9,7 +10,8 @@ import co.ecso.jdao.database.query.InsertQuery;
 import co.ecso.jdao.database.query.MultiColumnQuery;
 import co.ecso.jdao.database.query.SingleColumnQuery;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
