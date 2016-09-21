@@ -26,75 +26,61 @@ final class ApplicationConfig implements co.ecso.jdao.config.ApplicationConfig {
     private static ThreadFactory threadFactoryBuilder;
     static final Cache<CacheKey<?>, CompletableFuture<?>> CACHE = new ApplicationCache<>();
 
-    @Override
-    public String getMysqlHost() {
-        return "localhost";
-    }
 
     @Override
-    public int getMysqlPort() {
-        return 3306;
-    }
-
-    @Override
-    public int getMaxConnections() {
-        return 20;
-    }
-
-    @Override
-    public String getPoolName() {
+    public String databasePoolName() {
         return "hsqlpool";
     }
 
     @Override
-    public int getMinPoolSize() {
+    public int databasePoolMin() {
         return 1;
     }
 
     @Override
-    public int getMaxPoolSize() {
+    public int databasePoolMax() {
         return 10;
     }
 
     @Override
-    public int getPoolMaxSize() {
+    public int databasePoolMaxSize() {
         return 100;
     }
 
     @Override
-    public long getPoolIdleTimeout() {
+    public long databasePoolIdleTimeout() {
         return 1000;
     }
 
     @Override
-    public String getConnectString() {
+    public String connectionString() {
         return "jdbc:hsqldb:mem:jdaoref";
     }
 
     @Override
-    public synchronized ScheduledExecutorService getThreadPool() {
+    public synchronized ScheduledExecutorService threadPool() {
         //noinspection SynchronizeOnNonFinalField
         synchronized (threadFactoryBuilder) {
             if (threadFactoryBuilder == null) {
                 threadFactoryBuilder = new ThreadFactoryBuilder()
-                        .setNameFormat(this.getPoolName() + "-%d").build();
+                        .setNameFormat(this.databasePoolName() + "-%d").build();
             }
             return Executors.newSingleThreadScheduledExecutor(threadFactoryBuilder);
         }
     }
 
     @Override
-    public ConnectionPool<Connection> getConnectionPool() {
+    public ConnectionPool<Connection> databaseConnectionPool() {
         //noinspection SynchronizeOnNonFinalField
         synchronized (connectionPool) {
             if (connectionPool == null) {
-                connectionPool = new snaq.db.ConnectionPool(getPoolName(), getMinPoolSize(),
-                        getMaxPoolSize(), getPoolMaxSize(), getPoolIdleTimeout(),
-                        getConnectString(), null);
+                connectionPool = new snaq.db.ConnectionPool(databasePoolName(), databasePoolMin(),
+                        databasePoolMax(), databasePoolMaxSize(), databasePoolIdleTimeout(),
+                        connectionString(), null);
                 ConnectionPoolManager.registerGlobalShutdownHook();
             }
             return () -> {
-                final Connection connection = connectionPool.getConnection(getPoolIdleTimeout());
+                final Connection connection = connectionPool.getConnection(databasePoolIdleTimeout());
                 if (connection == null) {
                     throw new SQLException("Could not get connection from pool");
                 }

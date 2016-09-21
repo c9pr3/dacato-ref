@@ -38,7 +38,7 @@ public final class Customer implements DatabaseEntity<Long> {
     }
 
     @Override
-    public Long id() {
+    public Long primaryKey() {
         this.checkValidity();
         return this.id;
     }
@@ -50,7 +50,7 @@ public final class Customer implements DatabaseEntity<Long> {
      */
     public CompletableFuture<DatabaseResultField<String>> firstName() {
         this.checkValidity();
-        return this.findOne(new SingleColumnQuery<>(QUERY, Fields.FIRST_NAME, Fields.ID, this.id()));
+        return this.findOne(new SingleColumnQuery<>(QUERY, Fields.FIRST_NAME, Fields.ID, this.primaryKey()));
     }
 
     /**
@@ -60,7 +60,7 @@ public final class Customer implements DatabaseEntity<Long> {
      */
     public CompletableFuture<DatabaseResultField<String>> lastName() {
         this.checkValidity();
-        return this.findOne(new SingleColumnQuery<>(QUERY, Fields.LAST_NAME, Fields.ID, this.id()));
+        return this.findOne(new SingleColumnQuery<>(QUERY, Fields.LAST_NAME, Fields.ID, this.primaryKey()));
     }
 
     /**
@@ -70,19 +70,18 @@ public final class Customer implements DatabaseEntity<Long> {
      */
     public CompletableFuture<DatabaseResultField<Long>> number() {
         this.checkValidity();
-        return this.findOne(new SingleColumnQuery<>(QUERY, Fields.NUMBER, Fields.ID, this.id()));
+        return this.findOne(new SingleColumnQuery<>(QUERY, Fields.NUMBER, Fields.ID, this.primaryKey()));
     }
 
     @Override
     public CompletableFuture<Customer> save(final ColumnList columnList) {
         final SingleColumnUpdateQuery<Long> query = new SingleColumnUpdateQuery<>(
                 "UPDATE customer SET %s WHERE %%s = ?", Fields.ID, id, columnList);
-        final CompletableFuture<Boolean> updated = this.update(query);
+        final CompletableFuture<Integer> updated = this.update(query);
         this.invalid.set(true);
         return updated.thenApply(l -> new Customer(config, id));
     }
 
-    @Override
     public String toJson() throws SQLException {
         this.checkValidity();
         return "{}";

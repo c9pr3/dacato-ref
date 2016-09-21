@@ -50,7 +50,7 @@ public final class ApplicationCache<K, V> implements Cache<K, V> {
     }
 
     @Override
-    public void invalidateAll(final Iterable<?> var1) {
+    public void invalidateAll(final Iterable<K> var1) {
         CACHE.invalidateAll(var1);
     }
 

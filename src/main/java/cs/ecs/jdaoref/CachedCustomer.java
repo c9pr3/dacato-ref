@@ -39,7 +39,7 @@ public final class CachedCustomer implements CachedDatabaseEntity<Long> {
     }
 
     @Override
-    public Long id() {
+    public Long primaryKey() {
         return id;
     }
 
@@ -48,7 +48,6 @@ public final class CachedCustomer implements CachedDatabaseEntity<Long> {
         return null;
     }
 
-    @Override
     public String toJson() throws SQLException {
         return null;
     }
@@ -65,26 +64,26 @@ public final class CachedCustomer implements CachedDatabaseEntity<Long> {
 
     public CompletableFuture<DatabaseResultField<String>> firstName() {
         this.checkValidity();
-        return this.findOne(new SingleColumnQuery<>(QUERY, Fields.FIRST_NAME, Fields.ID, this.id()));
+        return this.findOne(new SingleColumnQuery<>(QUERY, Fields.FIRST_NAME, Fields.ID, this.primaryKey()));
     }
 
     public CompletableFuture<DatabaseResultField<String>> lastName() {
         this.checkValidity();
-        return this.findOne(new SingleColumnQuery<>(QUERY, Fields.LAST_NAME, Fields.ID, this.id()));
+        return this.findOne(new SingleColumnQuery<>(QUERY, Fields.LAST_NAME, Fields.ID, this.primaryKey()));
     }
 
     public CompletableFuture<DatabaseResultField<Long>> number() {
         this.checkValidity();
-        return this.findOne(new SingleColumnQuery<>(QUERY, Fields.NUMBER, Fields.ID, this.id()));
+        return this.findOne(new SingleColumnQuery<>(QUERY, Fields.NUMBER, Fields.ID, this.primaryKey()));
     }
 
-    public static final class Fields {
-        public static final DatabaseField<Long> ID = new DatabaseField<>("id", Long.class, Types.BIGINT);
-        public static final DatabaseField<Long> NUMBER =
+    static final class Fields {
+        static final DatabaseField<Long> ID = new DatabaseField<>("id", Long.class, Types.BIGINT);
+        static final DatabaseField<Long> NUMBER =
                 new DatabaseField<>("customer_number", Long.class, Types.BIGINT);
-        public static final DatabaseField<String> FIRST_NAME =
+        static final DatabaseField<String> FIRST_NAME =
                 new DatabaseField<>("customer_first_name", String.class, Types.VARCHAR);
-        public static final DatabaseField<String> LAST_NAME =
+        static final DatabaseField<String> LAST_NAME =
                 new DatabaseField<>("customer_last_name", String.class, Types.VARCHAR);
     }
 }
