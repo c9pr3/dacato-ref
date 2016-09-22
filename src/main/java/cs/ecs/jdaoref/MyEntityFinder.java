@@ -13,8 +13,8 @@ import co.ecso.jdao.database.internals.StatementFiller;
 final class MyEntityFinder implements EntityFinder {
 
     @Override
-    public ApplicationConfig config() {
-        return new ApplicationConfig();
+    public RefApplicationConfig config() {
+        return new RefApplicationConfig();
     }
 
     @Override

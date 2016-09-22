@@ -33,7 +33,7 @@ final class MyTruncater implements Truncater {
     }
 
     @Override
-    public ApplicationConfig config() {
-        return new ApplicationConfig();
+    public RefApplicationConfig config() {
+        return new RefApplicationConfig();
     }
 }

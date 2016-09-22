@@ -12,6 +12,7 @@ import co.ecso.jdao.database.query.SingleColumnQuery;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -25,14 +26,14 @@ import java.util.stream.Collectors;
 @SuppressWarnings({"WeakerAccess", "unused"})
 public final class Customers implements DatabaseTable<Long, Customer> {
 
-    private final ApplicationConfig config;
+    private final RefApplicationConfig config;
 
     /**
      * Construct.
      *
      * @param config Config.
      */
-    public Customers(final ApplicationConfig config) {
+    public Customers(final RefApplicationConfig config) {
         this.config = config;
     }
 
@@ -65,12 +66,10 @@ public final class Customers implements DatabaseTable<Long, Customer> {
     }
 
     public CompletableFuture<Customer> findOneByFirstNameAndLastName(final String firstName, final String lastName) {
-        final ColumnList values = () -> new HashMap<DatabaseField<?>, Object>() {
-            {
-                put(Customer.Fields.FIRST_NAME, "foo1");
-                put(Customer.Fields.LAST_NAME, "foo1");
-            }
-        };
+        Map<DatabaseField<?>, Object> m = new HashMap<>();
+        m.put(Customer.Fields.FIRST_NAME, firstName);
+        m.put(Customer.Fields.LAST_NAME, lastName);
+        final ColumnList values = () -> m;
         return findOne(new MultiColumnQuery<>("SELECT %s FROM customer WHERE %s = ? AND %s = ?",
                 Customer.Fields.ID, values)).thenApply(id -> new Customer(config, id.resultValue()));
     }
@@ -101,7 +100,7 @@ public final class Customers implements DatabaseTable<Long, Customer> {
 
     // Just to show it is possible
     @Override
-    public Inserter<Long, Customer> inserter() {
+    public Inserter<Long> inserter() {
         return new MyInserter<>();
     }
 

@@ -28,7 +28,7 @@ final class CachedCustomer implements CachedDatabaseEntity<Long> {
     private final Long id;
     private static final String TABLE_NAME = "customer";
     private static final String QUERY = String.format("SELECT %%s FROM %s WHERE id = ?", TABLE_NAME);
-    private transient final AtomicBoolean objectValid = new AtomicBoolean(true);
+    private final AtomicBoolean objectValid = new AtomicBoolean(true);
 
     CachedCustomer(final ApplicationConfig config, final Long id) {
         this.config = config;
@@ -46,13 +46,13 @@ final class CachedCustomer implements CachedDatabaseEntity<Long> {
     }
 
     @Override
-    public CompletableFuture<? extends DatabaseEntity<Long>> save(final ColumnList values) {
+    public CompletableFuture<DatabaseEntity<Long>> save(final ColumnList values) {
         return null;
     }
 
     @Override
-    public Cache<CacheKey, CompletableFuture<?>> cache() {
-        return cs.ecs.jdaoref.ApplicationConfig.CACHE;
+    public Cache<CacheKey, CompletableFuture> cache() {
+        return RefApplicationConfig.CACHE;
     }
 
     public CompletableFuture<DatabaseResultField<String>> firstName() {
@@ -78,5 +78,9 @@ final class CachedCustomer implements CachedDatabaseEntity<Long> {
                 new DatabaseField<>("customer_first_name", String.class, Types.VARCHAR);
         static final DatabaseField<String> LAST_NAME =
                 new DatabaseField<>("customer_last_name", String.class, Types.VARCHAR);
+
+        private Fields() {
+            //unused
+        }
     }
 }

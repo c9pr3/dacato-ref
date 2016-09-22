@@ -5,7 +5,6 @@ import co.ecso.jdao.database.CachedDatabaseTable;
 import co.ecso.jdao.database.cache.Cache;
 import co.ecso.jdao.database.cache.CacheKey;
 import co.ecso.jdao.database.internals.Truncater;
-import co.ecso.jdao.database.query.DatabaseResultField;
 import co.ecso.jdao.database.query.InsertQuery;
 
 import java.util.List;
@@ -22,7 +21,6 @@ import java.util.concurrent.CompletableFuture;
 final class CachedCustomers implements CachedDatabaseTable<Long, Customer> {
 
     private final ApplicationConfig config;
-    private static final Cache<CacheKey, CompletableFuture<DatabaseResultField<Long>>> CACHE = new ApplicationCache<>();
 
     public CachedCustomers(final ApplicationConfig config) {
         this.config = config;
@@ -58,8 +56,8 @@ final class CachedCustomers implements CachedDatabaseTable<Long, Customer> {
     }
 
     @Override
-    public Cache<CacheKey, CompletableFuture<?>> cache() {
-        return cs.ecs.jdaoref.ApplicationConfig.CACHE;
+    public Cache<CacheKey, CompletableFuture> cache() {
+        return RefApplicationConfig.CACHE;
     }
 
 }

@@ -23,7 +23,7 @@ public final class Customer implements DatabaseEntity<Long> {
     private static final String TABLE_NAME = "customer";
     private static final String QUERY = String.format("SELECT %%s FROM %s WHERE %%s = ?", TABLE_NAME);
     private final Long id;
-    private final ApplicationConfig config;
+    private final RefApplicationConfig config;
     private final AtomicBoolean objectValid = new AtomicBoolean(true);
 
     /**
@@ -32,7 +32,7 @@ public final class Customer implements DatabaseEntity<Long> {
      * @param config Config.
      * @param id     ID.
      */
-    public Customer(final ApplicationConfig config, final long id) {
+    public Customer(final RefApplicationConfig config, final long id) {
         this.id = id;
         this.config = config;
     }
@@ -73,9 +73,9 @@ public final class Customer implements DatabaseEntity<Long> {
     }
 
     @Override
-    public CompletableFuture<Customer> save(final ColumnList columnList) {
+    public CompletableFuture<DatabaseEntity<Long>> save(ColumnList columnValuesToSet) {
         final SingleColumnUpdateQuery<Long> query = new SingleColumnUpdateQuery<>(
-                "UPDATE customer SET %s WHERE %%s = ?", Fields.ID, id, columnList);
+                "UPDATE customer SET %s WHERE %%s = ?", Fields.ID, id, columnValuesToSet);
         final CompletableFuture<Integer> updated = this.update(query, () -> this.objectValid);
         this.objectValid.set(false);
         return updated.thenApply(l -> new Customer(config, id));

@@ -1,6 +1,5 @@
 package cs.ecs.jdaoref;
 
-import co.ecso.jdao.database.DatabaseEntity;
 import co.ecso.jdao.database.internals.Inserter;
 import co.ecso.jdao.database.internals.StatementFiller;
 import co.ecso.jdao.database.query.DatabaseField;
@@ -20,11 +19,11 @@ import java.util.concurrent.CompletableFuture;
  * @version $Id:$
  * @since 19.09.16
  */
-final class MyInserter<T, R extends DatabaseEntity<T>> implements Inserter<T, R> {
+final class MyInserter<T> implements Inserter<T> {
 
     @Override
-    public ApplicationConfig config() {
-        return new ApplicationConfig();
+    public RefApplicationConfig config() {
+        return new RefApplicationConfig();
     }
 
     @Override
