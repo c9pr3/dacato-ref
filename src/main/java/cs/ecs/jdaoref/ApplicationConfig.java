@@ -24,7 +24,7 @@ final class ApplicationConfig implements co.ecso.jdao.config.ApplicationConfig {
 
     private static snaq.db.ConnectionPool connectionPool;
     private static ThreadFactory threadFactoryBuilder;
-    static final Cache<CacheKey<?>, CompletableFuture<?>> CACHE = new ApplicationCache<>();
+    static final Cache<CacheKey, CompletableFuture<?>> CACHE = new ApplicationCache<>();
 
 
     @Override

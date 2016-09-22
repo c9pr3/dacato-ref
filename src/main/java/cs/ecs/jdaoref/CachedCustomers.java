@@ -22,8 +22,7 @@ import java.util.concurrent.CompletableFuture;
 final class CachedCustomers implements CachedDatabaseTable<Long, Customer> {
 
     private final ApplicationConfig config;
-    private static final Cache<CacheKey<Long>, CompletableFuture<DatabaseResultField<Long>>> CACHE =
-            new ApplicationCache<>();
+    private static final Cache<CacheKey, CompletableFuture<DatabaseResultField<Long>>> CACHE = new ApplicationCache<>();
 
     public CachedCustomers(final ApplicationConfig config) {
         this.config = config;
@@ -59,7 +58,7 @@ final class CachedCustomers implements CachedDatabaseTable<Long, Customer> {
     }
 
     @Override
-    public Cache<CacheKey<?>, CompletableFuture<?>> cache() {
+    public Cache<CacheKey, CompletableFuture<?>> cache() {
         return cs.ecs.jdaoref.ApplicationConfig.CACHE;
     }
 
