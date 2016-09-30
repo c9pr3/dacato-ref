@@ -37,8 +37,10 @@ final class MyInserter<T> implements Inserter<T> {
     }
 
     @Override
-    public DatabaseResultField<T> getResult(final String finalQuery, final DatabaseField<T> columnToSelect,
-                                            final PreparedStatement stmt) throws SQLException {
-        return Inserter.super.getResult(finalQuery, columnToSelect, stmt);
+    public DatabaseResultField<T> getResult(final String finalQuery,
+                                            final DatabaseField<T> columnToSelect,
+                                            final PreparedStatement stmt,
+                                            final boolean returnGeneratedKey) throws SQLException {
+        return Inserter.super.getResult(finalQuery, columnToSelect, stmt, returnGeneratedKey);
     }
 }

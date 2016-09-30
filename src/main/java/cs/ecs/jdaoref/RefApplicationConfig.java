@@ -9,9 +9,8 @@ import snaq.db.ConnectionPoolManager;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
 
 /**
  * RefApplicationConfig.
@@ -22,10 +21,9 @@ import java.util.concurrent.ThreadFactory;
  */
 final class RefApplicationConfig implements co.ecso.jdao.config.ApplicationConfig {
 
-    private static snaq.db.ConnectionPool connectionPool;
-    private static ThreadFactory threadFactoryBuilder;
+    private static volatile snaq.db.ConnectionPool connectionPool;
     static final Cache<CacheKey, CompletableFuture> CACHE = new ApplicationCache<>();
-
+    private static volatile ExecutorService threadPool;
 
     @Override
     public String databasePoolName() {
@@ -58,12 +56,12 @@ final class RefApplicationConfig implements co.ecso.jdao.config.ApplicationConfi
     }
 
     @Override
-    public synchronized ScheduledExecutorService threadPool() {
-        if (threadFactoryBuilder == null) {
-            threadFactoryBuilder = new ThreadFactoryBuilder()
-                    .setNameFormat(this.databasePoolName() + "-%d").build();
+    public ExecutorService threadPool() {
+        if (threadPool == null) {
+            threadPool = Executors.newCachedThreadPool(new ThreadFactoryBuilder()
+                    .setNameFormat(this.databasePoolName() + "-%d").build());
         }
-        return Executors.newSingleThreadScheduledExecutor(threadFactoryBuilder);
+        return threadPool;
     }
 
     @Override

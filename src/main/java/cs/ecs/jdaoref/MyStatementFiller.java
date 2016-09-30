@@ -19,8 +19,9 @@ import java.util.List;
 final class MyStatementFiller implements StatementFiller {
 
     @Override
-    public PreparedStatement fillStatement(final List<DatabaseField<?>> columnsWhere, final List<?> valuesWhere,
-                                            final PreparedStatement stmt) throws SQLException {
+    public PreparedStatement fillStatement(final String query, final List<DatabaseField<?>> columnsWhere,
+                                           final List<?> valuesWhere,
+                                           final PreparedStatement stmt) throws SQLException {
         for (int i = 0; i < valuesWhere.size(); i++) {
             final Object valueToSet = valuesWhere.get(i);
             if (columnsWhere.get(i) == null) {
