@@ -1,10 +1,10 @@
-package cs.ecs.jdaoref;
+package cs.ecs.dacatoref;
 
-import co.ecso.jdao.database.internals.Inserter;
-import co.ecso.jdao.database.internals.StatementFiller;
-import co.ecso.jdao.database.query.DatabaseField;
-import co.ecso.jdao.database.query.DatabaseResultField;
-import co.ecso.jdao.database.query.InsertQuery;
+import co.ecso.dacato.database.internals.Inserter;
+import co.ecso.dacato.database.internals.StatementFiller;
+import co.ecso.dacato.database.query.DatabaseField;
+import co.ecso.dacato.database.query.DatabaseResultField;
+import co.ecso.dacato.database.query.InsertQuery;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

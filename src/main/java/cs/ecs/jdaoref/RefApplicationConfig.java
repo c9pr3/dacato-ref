@@ -1,8 +1,8 @@
-package cs.ecs.jdaoref;
+package cs.ecs.dacatoref;
 
-import co.ecso.jdao.connection.ConnectionPool;
-import co.ecso.jdao.database.cache.Cache;
-import co.ecso.jdao.database.cache.CacheKey;
+import co.ecso.dacato.connection.ConnectionPool;
+import co.ecso.dacato.database.cache.Cache;
+import co.ecso.dacato.database.cache.CacheKey;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import snaq.db.ConnectionPoolManager;
 
@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
  * @version $Id:$
  * @since 29.08.16
  */
-final class RefApplicationConfig implements co.ecso.jdao.config.ApplicationConfig {
+final class RefApplicationConfig implements co.ecso.dacato.config.ApplicationConfig {
 
     private static volatile snaq.db.ConnectionPool connectionPool;
     static final Cache<CacheKey, CompletableFuture> CACHE = new ApplicationCache<>();
@@ -52,7 +52,7 @@ final class RefApplicationConfig implements co.ecso.jdao.config.ApplicationConfi
 
     @Override
     public String connectionString() {
-        return "jdbc:hsqldb:mem:jdaoref";
+        return "jdbc:hsqldb:mem:dacatoref";
     }
 
     @Override

@@ -1,11 +1,11 @@
-package cs.ecs.jdaoref;
+package cs.ecs.dacatoref;
 
-import co.ecso.jdao.config.ApplicationConfig;
-import co.ecso.jdao.database.CachedDatabaseTable;
-import co.ecso.jdao.database.cache.Cache;
-import co.ecso.jdao.database.cache.CacheKey;
-import co.ecso.jdao.database.internals.Truncater;
-import co.ecso.jdao.database.query.InsertQuery;
+import co.ecso.dacato.config.ApplicationConfig;
+import co.ecso.dacato.database.CachedDatabaseTable;
+import co.ecso.dacato.database.cache.Cache;
+import co.ecso.dacato.database.cache.CacheKey;
+import co.ecso.dacato.database.internals.Truncater;
+import co.ecso.dacato.database.query.InsertQuery;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

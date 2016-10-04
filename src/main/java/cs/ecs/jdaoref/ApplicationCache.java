@@ -1,6 +1,6 @@
-package cs.ecs.jdaoref;
+package cs.ecs.dacatoref;
 
-import co.ecso.jdao.database.cache.Cache;
+import co.ecso.dacato.database.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 import java.util.Map;

@@ -1,14 +1,14 @@
-package cs.ecs.jdaoref;
+package cs.ecs.dacatoref;
 
-import co.ecso.jdao.database.ColumnList;
-import co.ecso.jdao.database.DatabaseTable;
-import co.ecso.jdao.database.internals.EntityFinder;
-import co.ecso.jdao.database.internals.Inserter;
-import co.ecso.jdao.database.internals.Truncater;
-import co.ecso.jdao.database.query.DatabaseField;
-import co.ecso.jdao.database.query.InsertQuery;
-import co.ecso.jdao.database.query.MultiColumnQuery;
-import co.ecso.jdao.database.query.SingleColumnQuery;
+import co.ecso.dacato.database.ColumnList;
+import co.ecso.dacato.database.DatabaseTable;
+import co.ecso.dacato.database.internals.EntityFinder;
+import co.ecso.dacato.database.internals.Inserter;
+import co.ecso.dacato.database.internals.Truncater;
+import co.ecso.dacato.database.query.DatabaseField;
+import co.ecso.dacato.database.query.InsertQuery;
+import co.ecso.dacato.database.query.MultiColumnQuery;
+import co.ecso.dacato.database.query.SingleColumnQuery;
 
 import java.util.HashMap;
 import java.util.List;
@@ -123,7 +123,7 @@ public final class Customers implements DatabaseTable<Long, Customer> {
     }
 
     @Override
-    public co.ecso.jdao.config.ApplicationConfig config() {
+    public co.ecso.dacato.config.ApplicationConfig config() {
         return config;
     }
 }

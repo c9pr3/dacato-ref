@@ -1,11 +1,11 @@
-package cs.ecs.jdaoref;
+package cs.ecs.dacatoref;
 
-import co.ecso.jdao.database.ColumnList;
-import co.ecso.jdao.database.DatabaseEntity;
-import co.ecso.jdao.database.query.DatabaseField;
-import co.ecso.jdao.database.query.DatabaseResultField;
-import co.ecso.jdao.database.query.SingleColumnQuery;
-import co.ecso.jdao.database.query.SingleColumnUpdateQuery;
+import co.ecso.dacato.database.ColumnList;
+import co.ecso.dacato.database.DatabaseEntity;
+import co.ecso.dacato.database.query.DatabaseField;
+import co.ecso.dacato.database.query.DatabaseResultField;
+import co.ecso.dacato.database.query.SingleColumnQuery;
+import co.ecso.dacato.database.query.SingleColumnUpdateQuery;
 
 import java.sql.Types;
 import java.util.concurrent.CompletableFuture;
@@ -82,7 +82,7 @@ public final class Customer implements DatabaseEntity<Long> {
     }
 
     @Override
-    public co.ecso.jdao.config.ApplicationConfig config() {
+    public co.ecso.dacato.config.ApplicationConfig config() {
         return this.config;
     }
 

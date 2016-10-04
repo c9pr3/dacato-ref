@@ -1,7 +1,7 @@
-package cs.ecs.jdaoref;
+package cs.ecs.dacatoref;
 
-import co.ecso.jdao.database.internals.EntityFinder;
-import co.ecso.jdao.database.internals.StatementFiller;
+import co.ecso.dacato.database.internals.EntityFinder;
+import co.ecso.dacato.database.internals.StatementFiller;
 
 /**
  * MyEntityFinder.

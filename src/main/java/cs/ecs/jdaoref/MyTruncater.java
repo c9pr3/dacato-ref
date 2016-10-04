@@ -1,6 +1,6 @@
-package cs.ecs.jdaoref;
+package cs.ecs.dacatoref;
 
-import co.ecso.jdao.database.internals.Truncater;
+import co.ecso.dacato.database.internals.Truncater;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
