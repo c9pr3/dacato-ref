@@ -2,10 +2,10 @@ package cs.ecs.dacatoref;
 
 import co.ecso.dacato.database.ColumnList;
 import co.ecso.dacato.database.DatabaseEntity;
-import co.ecso.dacato.database.query.DatabaseField;
-import co.ecso.dacato.database.query.DatabaseResultField;
-import co.ecso.dacato.database.query.SingleColumnQuery;
-import co.ecso.dacato.database.query.SingleColumnUpdateQuery;
+import co.ecso.dacato.database.querywrapper.DatabaseField;
+import co.ecso.dacato.database.querywrapper.DatabaseResultField;
+import co.ecso.dacato.database.querywrapper.SingleColumnQuery;
+import co.ecso.dacato.database.querywrapper.SingleColumnUpdateQuery;
 
 import java.sql.Types;
 import java.util.concurrent.CompletableFuture;

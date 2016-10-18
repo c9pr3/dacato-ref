@@ -1,10 +1,10 @@
 package cs.ecs.dacatoref;
 
-import co.ecso.dacato.database.internals.Inserter;
-import co.ecso.dacato.database.internals.StatementFiller;
-import co.ecso.dacato.database.query.DatabaseField;
-import co.ecso.dacato.database.query.DatabaseResultField;
-import co.ecso.dacato.database.query.InsertQuery;
+import co.ecso.dacato.database.query.Inserter;
+import co.ecso.dacato.database.querywrapper.DatabaseField;
+import co.ecso.dacato.database.querywrapper.DatabaseResultField;
+import co.ecso.dacato.database.querywrapper.InsertQuery;
+import co.ecso.dacato.database.statement.StatementFiller;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -34,6 +34,11 @@ final class MyInserter<T> implements Inserter<T> {
     @Override
     public CompletableFuture<DatabaseResultField<T>> add(final InsertQuery<T> query) {
         return Inserter.super.add(query);
+    }
+
+    @Override
+    public int statementOptions() {
+        return 0;
     }
 
     @Override

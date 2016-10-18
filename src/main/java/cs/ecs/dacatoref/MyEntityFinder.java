@@ -1,7 +1,7 @@
 package cs.ecs.dacatoref;
 
-import co.ecso.dacato.database.internals.EntityFinder;
-import co.ecso.dacato.database.internals.StatementFiller;
+import co.ecso.dacato.database.query.EntityFinder;
+import co.ecso.dacato.database.statement.StatementFiller;
 
 /**
  * MyEntityFinder.
@@ -20,6 +20,11 @@ final class MyEntityFinder implements EntityFinder {
     @Override
     public StatementFiller statementFiller() {
         return new MyStatementFiller();
+    }
+
+    @Override
+    public int statementOptions() {
+        return 0;
     }
 
 }

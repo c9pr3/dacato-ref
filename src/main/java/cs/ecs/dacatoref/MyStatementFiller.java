@@ -1,7 +1,7 @@
 package cs.ecs.dacatoref;
 
-import co.ecso.dacato.database.internals.StatementFiller;
-import co.ecso.dacato.database.query.DatabaseField;
+import co.ecso.dacato.database.querywrapper.DatabaseField;
+import co.ecso.dacato.database.statement.StatementFiller;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

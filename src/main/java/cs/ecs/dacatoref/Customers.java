@@ -2,13 +2,13 @@ package cs.ecs.dacatoref;
 
 import co.ecso.dacato.database.ColumnList;
 import co.ecso.dacato.database.DatabaseTable;
-import co.ecso.dacato.database.internals.EntityFinder;
-import co.ecso.dacato.database.internals.Inserter;
-import co.ecso.dacato.database.internals.Truncater;
-import co.ecso.dacato.database.query.DatabaseField;
-import co.ecso.dacato.database.query.InsertQuery;
-import co.ecso.dacato.database.query.MultiColumnQuery;
-import co.ecso.dacato.database.query.SingleColumnQuery;
+import co.ecso.dacato.database.query.EntityFinder;
+import co.ecso.dacato.database.query.Inserter;
+import co.ecso.dacato.database.query.Truncater;
+import co.ecso.dacato.database.querywrapper.DatabaseField;
+import co.ecso.dacato.database.querywrapper.InsertQuery;
+import co.ecso.dacato.database.querywrapper.MultiColumnQuery;
+import co.ecso.dacato.database.querywrapper.SingleColumnQuery;
 
 import java.util.HashMap;
 import java.util.List;

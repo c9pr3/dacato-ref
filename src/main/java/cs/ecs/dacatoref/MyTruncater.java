@@ -1,6 +1,6 @@
 package cs.ecs.dacatoref;
 
-import co.ecso.dacato.database.internals.Truncater;
+import co.ecso.dacato.database.query.Truncater;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -30,6 +30,11 @@ final class MyTruncater implements Truncater {
             }
         }, config().threadPool());
         return retValFuture;
+    }
+
+    @Override
+    public int statementOptions() {
+        return 0;
     }
 
     @Override
