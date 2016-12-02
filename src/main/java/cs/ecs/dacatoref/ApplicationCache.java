@@ -1,12 +1,14 @@
 package cs.ecs.dacatoref;
 
 import co.ecso.dacato.database.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import co.ecso.dacato.database.cache.CacheKey;
+import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.HazelcastInstance;
 
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * ApplicationCache.
@@ -15,57 +17,59 @@ import java.util.concurrent.TimeUnit;
  * @version $Id:$
  * @since 04.09.16
  */
-final class ApplicationCache<K, V> implements Cache<K, V> {
-    private final com.google.common.cache.Cache<K, V>
-            cache = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.SECONDS).maximumSize(50).build();
+final class ApplicationCache implements Cache {
+    private static final HazelcastInstance HAZELCAST_INSTANCE = Hazelcast.newHazelcastInstance();
+    private final Map<Object, Object> APPLICATION_CACHE = HAZELCAST_INSTANCE.getMap("application");
+
+//    private final com.google.common.cache.Cache<K, V>
+//            cache = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.SECONDS).maximumSize(50).build();
 
     @Override
-    public V getIfPresent(final K key) {
-        return cache.getIfPresent(key);
+    public <V> CompletableFuture<V> get(final CacheKey key, final Callable<CompletableFuture<V>> callable)
+            throws ExecutionException {
+        if (!APPLICATION_CACHE.containsKey(key)) {
+            try {
+                final CompletableFuture<V> future = callable.call();
+                future.thenAccept(toPut -> APPLICATION_CACHE.put(key, toPut));
+                return  future;
+            } catch (final Exception e) {
+                throw new ExecutionException(e.getMessage(), e);
+            }
+        }
+
+        return CompletableFuture.completedFuture((V) APPLICATION_CACHE.get(key));
     }
 
     @Override
-    public V get(final K var1, final Callable<? extends V> var2) throws ExecutionException {
-        return cache.get(var1, var2);
+    public <V> void put(final CacheKey key, final CompletableFuture<V> value) {
+        if (!APPLICATION_CACHE.containsKey(key)) {
+            value.thenAccept(toPut -> APPLICATION_CACHE.put(key, toPut));
+        }
     }
 
     @Override
-    public Map<K, V> getAllPresent(final Iterable<?> var1) {
-        return cache.getAllPresent(var1);
+    public void invalidateAll(final Iterable<CacheKey> keys) {
+        keys.forEach(APPLICATION_CACHE::remove);
     }
 
     @Override
-    public void put(final K var1, final V var2) {
-        cache.put(var1, var2);
-    }
-
-    @Override
-    public void putAll(final Map<? extends K, ? extends V> var1) {
-        cache.putAll(var1);
-    }
-
-    @Override
-    public void invalidate(final Object var1) {
-        cache.invalidate(var1);
-    }
-
-    @Override
-    public void invalidateAll(final Iterable<K> var1) {
-        cache.invalidateAll(var1);
+    public void invalidate(final CacheKey var1) {
+        APPLICATION_CACHE.remove(var1);
     }
 
     @Override
     public void invalidateAll() {
-        cache.invalidateAll();
+        APPLICATION_CACHE.clear();
     }
 
     @Override
     public long size() {
-        return cache.size();
+        return APPLICATION_CACHE.size();
     }
 
     @Override
     public void cleanUp() {
-        cache.cleanUp();
+        APPLICATION_CACHE.clear();
     }
+
 }

@@ -5,7 +5,6 @@ import co.ecso.dacato.database.CachedDatabaseEntity;
 import co.ecso.dacato.database.ColumnList;
 import co.ecso.dacato.database.DatabaseEntity;
 import co.ecso.dacato.database.cache.Cache;
-import co.ecso.dacato.database.cache.CacheKey;
 import co.ecso.dacato.database.querywrapper.DatabaseField;
 import co.ecso.dacato.database.querywrapper.DatabaseResultField;
 import co.ecso.dacato.database.querywrapper.SingleColumnQuery;
@@ -51,7 +50,7 @@ final class CachedCustomer implements CachedDatabaseEntity<Long> {
     }
 
     @Override
-    public Cache<CacheKey, CompletableFuture> cache() {
+    public Cache cache() {
         return RefApplicationConfig.CACHE;
     }
 

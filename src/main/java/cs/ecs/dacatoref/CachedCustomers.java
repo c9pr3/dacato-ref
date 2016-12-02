@@ -3,7 +3,6 @@ package cs.ecs.dacatoref;
 import co.ecso.dacato.config.ApplicationConfig;
 import co.ecso.dacato.database.CachedDatabaseTable;
 import co.ecso.dacato.database.cache.Cache;
-import co.ecso.dacato.database.cache.CacheKey;
 import co.ecso.dacato.database.query.Truncater;
 import co.ecso.dacato.database.querywrapper.InsertQuery;
 
@@ -56,7 +55,7 @@ final class CachedCustomers implements CachedDatabaseTable<Long, Customer> {
     }
 
     @Override
-    public Cache<CacheKey, CompletableFuture> cache() {
+    public Cache cache() {
         return RefApplicationConfig.CACHE;
     }
 

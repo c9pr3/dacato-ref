@@ -22,7 +22,7 @@ import java.util.concurrent.Executors;
 final class RefApplicationConfig implements co.ecso.dacato.config.ApplicationConfig {
 
     private static volatile snaq.db.ConnectionPool connectionPool;
-    static final Cache<CacheKey, CompletableFuture> CACHE = new ApplicationCache<>();
+    static final Cache CACHE = new ApplicationCache();
     private static volatile ExecutorService threadPool;
 
     @Override
