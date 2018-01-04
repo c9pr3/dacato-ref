@@ -5,6 +5,7 @@ import co.ecso.dacato.database.CachedDatabaseTable;
 import co.ecso.dacato.database.cache.Cache;
 import co.ecso.dacato.database.query.Truncater;
 import co.ecso.dacato.database.querywrapper.InsertQuery;
+import co.ecso.dacato.database.querywrapper.RemoveQuery;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -52,6 +53,11 @@ final class CachedCustomers implements CachedDatabaseTable<Long, Customer> {
     @Override
     public Truncater truncater() {
         return new MyTruncater();
+    }
+
+    @Override
+    public <S> CompletableFuture<Integer> removeOne(final RemoveQuery<S> query) {
+        return CachedDatabaseTable.super.removeOne(query);
     }
 
     @Override

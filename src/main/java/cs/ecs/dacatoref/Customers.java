@@ -5,10 +5,7 @@ import co.ecso.dacato.database.DatabaseTable;
 import co.ecso.dacato.database.query.EntityFinder;
 import co.ecso.dacato.database.query.Inserter;
 import co.ecso.dacato.database.query.Truncater;
-import co.ecso.dacato.database.querywrapper.DatabaseField;
-import co.ecso.dacato.database.querywrapper.InsertQuery;
-import co.ecso.dacato.database.querywrapper.MultiColumnQuery;
-import co.ecso.dacato.database.querywrapper.SingleColumnQuery;
+import co.ecso.dacato.database.querywrapper.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -108,6 +105,11 @@ public final class Customers implements DatabaseTable<Long, Customer> {
     @Override
     public EntityFinder entityFinder() {
         return new MyEntityFinder();
+    }
+
+    @Override
+    public <S> CompletableFuture<Integer> removeOne(final RemoveQuery<S> query) {
+        return DatabaseTable.super.removeOne(query);
     }
 
     /**
