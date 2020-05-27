@@ -8,7 +8,6 @@ import co.ecso.dacato.database.cache.Cache;
 import co.ecso.dacato.database.querywrapper.DatabaseField;
 import co.ecso.dacato.database.querywrapper.DatabaseResultField;
 import co.ecso.dacato.database.querywrapper.SingleColumnQuery;
-
 import java.sql.Types;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -16,7 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * CachedCustomer.
  *
- * @author Christian Senkowski (cs@2scale.net)
+ * @author Christian Scharmach (cs@e-cs.co)
  * @version $Id:$
  * @since 17.09.16
  */
@@ -60,8 +59,7 @@ final class CachedCustomer implements CachedDatabaseEntity<Long> {
     }
 
     public CompletableFuture<DatabaseResultField<String>> lastName() {
-        return this.findOne(new SingleColumnQuery<>(QUERY, Fields.LAST_NAME, Fields.ID, this.primaryKey()), () ->
-        this.objectValid);
+        return this.findOne(new SingleColumnQuery<>(QUERY, Fields.LAST_NAME, Fields.ID, this.primaryKey()), () -> this.objectValid);
     }
 
     public CompletableFuture<DatabaseResultField<Long>> number() {

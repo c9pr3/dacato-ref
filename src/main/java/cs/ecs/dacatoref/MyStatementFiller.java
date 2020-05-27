@@ -12,7 +12,7 @@ import java.util.List;
  *
  * Not needed, but we want to show it is possible.
  *
- * @author Christian Senkowski (cs@2scale.net)
+ * @author Christian Scharmach (cs@e-cs.co)
  * @version $Id:$
  * @since 19.09.16
  */

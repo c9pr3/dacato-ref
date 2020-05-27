@@ -6,7 +6,7 @@ import co.ecso.dacato.database.statement.StatementFiller;
 /**
  * MyEntityFinder.
  *
- * @author Christian Senkowski (cs@2scale.net)
+ * @author Christian Scharmach (cs@e-cs.co)
  * @version $Id:$
  * @since 19.09.16
  */
